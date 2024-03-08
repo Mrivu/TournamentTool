@@ -1,19 +1,28 @@
 import { BrowserRouter as Router, Route, Switch } from 'react-router-dom';
+import { useState } from 'react';
 import './App.css'
-import Lobby from './Lobby';
-import AverageGame from './AverageGame';
+import Lobby from './components/Lobby';
+import AverageGame from './components/AverageGame';
 
 function App() {
+  // Global stuff
+  const [player, isPlayer] = useState(true);
+
+  const changeRole = (role:boolean) => {
+      isPlayer(role);
+  };
+
+
   return (
     <Router>
       <div className= "App">
         <Switch>
           <Route exact path="/">
-            <Lobby>
+            <Lobby player={player} changeRole={changeRole}>
             </Lobby>
           </Route>
-          <Route exact path="/AverageGame">
-            <AverageGame>
+          <Route exact path="/averageGame">
+            <AverageGame player={player}>
             </AverageGame>
           </Route>
         </Switch>

@@ -24,6 +24,3 @@ const server = app.listen(port, () => {
 
 // Websocets
 // Persistent connection between client and server
-
-// Routers nii ei shit ass coodii: https://github.com/Paivola-Student-Innovation-Lab/DailyCrypt/blob/main/client/src/index.tsx
-//https://reactrouter.com/en/main/start/tutorial

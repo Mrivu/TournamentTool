@@ -1,20 +1,19 @@
 const express = require('express');
-const router = express.Router();
 
-const gamemode = "None";
+let gamemode = "None";
 const gamemodes = ["None", "Average game"];
 
+const router = express.Router();
+
 router.get('/login', (req, res) => {
-    const password = "myPass";
-    const inputPassword = req.query.password;
-    if (inputPassword == password) {
-      res.json(true);
-    } else {
-      res.json(false);
-    }
+        const password = "myPass";
+        const inputPassword = req.query.password;
+        if (inputPassword == password) {
+            res.json(true);
+        } else {
+            res.json(false);
+        }
 });
-
-
 
 router.get('/changeGamemode', (req, res) => {
     const gamemodeChange = req.query.gamemode;
@@ -28,7 +27,7 @@ router.get('/changeGamemode', (req, res) => {
 });
 
 router.get('/getGamemode', (req, res) => {
-    res.json(gamemode);
+    res.send({gamemode:gamemode});
 });
 
 module.exports = router;

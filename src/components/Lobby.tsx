@@ -1,26 +1,58 @@
-import { useState } from 'react';
-import reactLogo from './assets/react.svg'
+import { useState, useEffect } from 'react';
+import reactLogo from '../assets/react.svg'
 import viteLogo from '/vite.svg'
+import { useHistory } from 'react-router-dom';
 
-const Lobby = () => {
+interface LobbyProps {
+  player: boolean;
+  changeRole: (role: boolean) => void;
+}
+
+const Lobby = ({ player, changeRole }: LobbyProps) => {
     const [lobby, setLobby] = useState(true);
     const [gamemode, setGamemode] = useState('');
     const [gamemode_textfield, gamemode_setTextfield] = useState('');
-    const [number_textfield, number_setTextfield] = useState('');
-    const [chosen_Number, setChosenNumber] = useState('');
-    const [decided, setDecision] = useState(false);
-    const [player, isPlayer] = useState(true);
     const [gmPass, setGmPass_textfield] = useState('');
-    const [textAlert, setAlert] = useState(false);
+    const [textAlert, setAlert] = useState('');
     const [gamemodeSet, setGamemodeSetNotification] = useState(0); // 0 = no notification, 1 = changed, 2 = failed
+
+    const history = useHistory();
+
+    useEffect(() => {
+        console.log('Fetching data...');
+        const fetchData = async () => {
+            try {
+                const response = await fetch('http://localhost:4000/getGamemode');
+                const result = await response.json();
+                setGamemode(result.gamemode);
+            } catch (error) {
+                console.error('Error fetching data:', error);
+            }
+        };
+
+        // Call the function once immediately
+        fetchData();
+
+        // Then set it to be called every 5 seconds (5000 milliseconds)
+        const intervalId = setInterval(fetchData, 5000);
+
+        // Clear interval on component unmount
+        return () => clearInterval(intervalId);
+    }, []);
 
     return (
         <>
         {lobby == true && <div>
           <h1> Game login </h1>
           <button className="role-select-button" onClick={() => {
-            isPlayer(true);
-            setLobby(false);
+            if (gamemode != 'None') {
+              changeRole(true);
+              history.push('/averageGame');
+            }
+            else
+            {
+              alert("No game currently running");
+            }
           }}>
             Join as player
           </button>
@@ -33,11 +65,11 @@ const Lobby = () => {
             if (response.ok) {
               const isPasswordCorrect = await response.json();
               if (isPasswordCorrect) {
-                isPlayer(false);
+                changeRole(false);
                 setLobby(false);
-                setAlert(false);
+                setAlert("");
               } else {
-                setAlert(true);
+                setAlert("Incorrect password");
               }
             }
           }}>
@@ -50,16 +82,7 @@ const Lobby = () => {
                 onChange={(e) => setGmPass_textfield(e.target.value)}
               />
           </div>
-          {textAlert == true &&
-          <h2> Incorrect password </h2>
-          }
-          <div className="input-field">
-            <input value={gamemode_textfield}
-              placeholder="Enter Gamemode"
-              type="text"
-              onChange={(e) => {gamemode_setTextfield(e.target.value)}}
-            />
-          </div>
+          <h2> {textAlert} </h2>
           </div>
         }
         {lobby == false && 
@@ -93,35 +116,18 @@ const Lobby = () => {
               Change Gamemode
             </button>
           </div>
+          <div className="input-field">
+            <input value={gamemode_textfield}
+              placeholder="Enter Gamemode"
+              type="text"
+              onChange={(e) => {gamemode_setTextfield(e.target.value)}}
+            />
+          </div>
           {gamemodeSet == 1 &&
           <h2> Gamemode changed succesfully </h2>
           }
           {gamemodeSet == 2 &&
           <h2> Gamemode change failed </h2>
-          }
-          {gamemode === "Average game" && decided != true && <div>
-          <h2> Enter a number from 0-100</h2>
-          <h3> Win condition:</h3>
-          <h3> Choose a number closest to the average of all chosen numbers multiplied by 0.8</h3>
-          <div className="input-field">
-            <input value={number_textfield}
-              placeholder="Number from 0-100"
-              type="text"
-              onChange={(e) => {number_setTextfield(e.target.value)}}
-            />
-          </div>
-          <button className="submit-button" onClick={() => {
-            setChosenNumber(number_textfield);
-            setDecision(true);
-          }}>
-            Submit chosen number
-          </button>
-          </div>
-          }
-          {gamemode === "Average game" && decided == true && <div>
-          <h2> Number submitted</h2>
-          <h3> Please wait for the results </h3>
-          </div>
           }
           <div className="role-text">
             {player == true && <h3> Player </h3>}
