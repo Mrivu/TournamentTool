@@ -11,9 +11,12 @@
   },
   "proxy": "https://localhost:4000",
   "dependencies": {
+    "@socket.io/admin-ui": "^0.5.1",
     "react": "^18.2.0",
     "react-dom": "^18.2.0",
-    "react-router-dom": "^5.3.4"
+    "react-router-dom": "^5.3.4",
+    "socket.io": "^4.7.5",
+    "socket.io-client": "^4.7.5"
   },
   "devDependencies": {
     "@types/react": "^18.2.56",

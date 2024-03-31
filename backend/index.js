@@ -2,6 +2,22 @@ const express = require('express');
 const cors = require('cors');
 const bodyParser = require('body-parser');
 const router = require('./routes/router');
+const { Socket } = require('socket.io');
+
+const io = require('socket.io')(3000, {cors: {origin: ['http://localhost:5173']}});
+
+io.on("connection", socket => {
+    console.log(socket.id);
+    socket.on("test", message => {
+        console.log(message);
+    });
+    socket.on("newRound", e => {
+        socket.broadcast.emit("StartNewRound");
+    });
+    socket.on('endConnection', function (){
+        socket.disconnect(0);
+    });
+})
 
 const app = express();
 

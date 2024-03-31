@@ -3,6 +3,16 @@ const express = require('express');
 let gamemode = "None";
 const gamemodes = ["None", "Average game"];
 
+// Game attributes
+// AVERAGE GAME
+const averageGameResults = {};
+router.get('/login', (req, res) => {
+    const name = req.query.name;
+    const number = req.query.number;
+    averageGameResults[name] = number;
+});
+
+
 const router = express.Router();
 
 router.get('/login', (req, res) => {
