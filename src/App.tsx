@@ -1,10 +1,10 @@
 import { BrowserRouter as Router, Route, Switch } from 'react-router-dom';
 import { useState } from 'react';
-import {io, Socket} from 'socket.io-client';
 import './App.css'
 import Lobby from './components/Lobby';
 import AverageGame from './components/AverageGame';
 import GMPage from './components/GMPage';
+import BoxGame from './components/BoxGame';
 
 function App() {
   // Global stuff
@@ -20,7 +20,7 @@ function App() {
       <div className= "App">
         <Switch>
           <Route exact path="/">
-            <Lobby player={player} changeRole={changeRole}>
+            <Lobby changeRole={changeRole}>
             </Lobby>
           </Route>
           <Route exact path="/GMPage">
@@ -30,6 +30,10 @@ function App() {
           <Route exact path="/averageGame">
             <AverageGame player={player}>
             </AverageGame>
+          </Route>
+          <Route exact path="/boxGame">
+            <BoxGame player={player}>
+            </BoxGame>
           </Route>
         </Switch>
       </div>

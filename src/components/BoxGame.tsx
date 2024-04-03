@@ -1,6 +1,6 @@
 import React from "react";
 import './AverageGame.css';
-import { io } from 'socket.io-client';
+import { io, Socket } from 'socket.io-client';
 
 interface AverageGameProps {
   player: boolean;
@@ -20,7 +20,7 @@ const AverageGame = ({ player}: AverageGameProps) => {
       // End the connection
       //socket.emit("endConnection");
     });
-    socket.on("StartNewRound", () =>{
+    socket.on("StartNewRound", e => {
       setDecision(false);
       console.log("New round started");
     });

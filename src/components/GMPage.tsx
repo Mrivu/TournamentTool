@@ -1,5 +1,4 @@
-import React from "react";
-import { io, Socket } from 'socket.io-client';
+import { io } from 'socket.io-client';
 import { useState, useEffect } from 'react';
 import diceImage from '../assets/d6.svg'
 

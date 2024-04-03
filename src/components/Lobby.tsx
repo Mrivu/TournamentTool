@@ -2,11 +2,10 @@ import { useState, useEffect } from 'react';
 import { useHistory } from 'react-router-dom';
 
 interface LobbyProps {
-  player: boolean;
   changeRole: (role: boolean) => void;
 }
 
-const Lobby = ({ player, changeRole }: LobbyProps) => {
+const Lobby = ({ changeRole }: LobbyProps) => {
     const [gamemode, setGamemode] = useState('');
     const [gmPass, setGmPass_textfield] = useState('');
     const [textAlert, setAlert] = useState('');
