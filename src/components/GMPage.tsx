@@ -1,8 +1,7 @@
 import React from "react";
 import { io, Socket } from 'socket.io-client';
 import { useState, useEffect } from 'react';
-import reactLogo from '../assets/react.svg'
-import viteLogo from '/vite.svg'
+import diceImage from '../assets/d6.svg'
 
 interface GMPageProps {
   player: boolean;
@@ -48,11 +47,8 @@ const GMPage = ({player}: GMPageProps) => {
         <>
         <div>
           <div>
-          <a href="https://vitejs.dev" target="_blank">
-            <img src={viteLogo} className="logo" alt="Vite logo" />
-          </a>
-          <a href="https://react.dev" target="_blank">
-            <img src={reactLogo} className="logo react" alt="React logo" />
+          <a href="https://docs.google.com/document/d/1-c47Q7ZQRVJLlqLl4X110R9MfM0zixqp5la3nl2jEyY/edit?usp=sharing" target="_blank">
+            <img src={diceImage} className="logo" />
           </a>
         </div>
         <h2> Current Game is {gamemode} </h2>
