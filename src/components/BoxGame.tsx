@@ -1,17 +1,19 @@
 import React from "react";
-import './AverageGame.css';
-import { io, Socket } from 'socket.io-client';
+import './BoxGame.css';
+import { io } from 'socket.io-client';
 
-interface AverageGameProps {
+interface BoxGameProps {
   player: boolean;
 }
 
-const AverageGame = ({ player}: AverageGameProps) => {
+const BoxGame = ({ player}: BoxGameProps) => {
     const [number_textfield, number_setTextfield] = React.useState('');
     const [decided, setDecision] = React.useState(false);
     const [showExplanation, setShow] = React.useState(true);
     const [playerName, setName] = React.useState('');
     const [nameLocked, setLock] = React.useState(false);
+    const [tokenCount, setTokens] = React.useState(100);
+    const [eliminated, setElimination] = React.useState(false);
     
     const socket = io('http://localhost:3000');
     socket.on('connect', () => {
@@ -24,32 +26,32 @@ const AverageGame = ({ player}: AverageGameProps) => {
       setDecision(false);
       console.log("New round started");
     });
+    socket.on("remove", e => {
+      setElimination(true)
+      socket.emit("endConnection");
+    });
 
     return (
         <>
+        { !eliminated && <div>
         <div>
             {decided == false && <div>
-                <h1> The Average Game </h1>
-                <div className="average-game-body">
+                <h1> The Box </h1>
+                <div className="box-game-body">
                     <div className="explanation">
-                      <h2> Enter a number from 0-100</h2>
+                      <h2> Expend tokens in secret. You start with 100 tokens </h2>
                     </div>
                     <button className="explanation-button" onClick={() => setShow(!showExplanation)}>
                       {showExplanation ? "Hide explanation" : "Show explanation"}
                     </button>
                   {showExplanation && <div className="explanation-dropdown">
                     <div className="explanation">
-                      <h4> Win condition:</h4>
-                      <h4> Choose a number closest to the average of all chosen numbers multiplied by 0.8</h4>
-                      <h4> All but the winner lose 1 point </h4>
-                    </div>
-                    <div className="explanation">
                       <h4> Clear condition:</h4>
                       <h4> Be the last participant in the game </h4>
                     </div>
                     <div className="explanation">
                       <h4> Lose condition:</h4>
-                      <h4> Reach -10 points </h4>
+                      <h4> Place the smallest amount of tokens during a round </h4>
                     </div>
                     <div className="explanation">
                       <h4> Elimination condition:</h4>
@@ -59,14 +61,14 @@ const AverageGame = ({ player}: AverageGameProps) => {
                   <div className="resultSubmit">
                     <div className="input-field">
                           <input value={number_textfield}
-                            placeholder="Number from 0-100"
+                            placeholder="Insert number of tokens"
                             type="number"
                             onChange={(e) => {number_setTextfield(e.target.value)}}
                           />
                     </div>
                     <button className="submit-button" onClick={() => {
-                      if (parseInt(number_textfield) < 0 || parseInt(number_textfield) > 100) {
-                        alert("Number must be between 0 and 100");
+                      if (parseInt(number_textfield) < 0 || parseInt(number_textfield) > tokenCount) {
+                        alert("Invalid number of tokens");
                         return;
                       }
                       if (!nameLocked) {
@@ -75,7 +77,7 @@ const AverageGame = ({ player}: AverageGameProps) => {
                       }
                       setDecision(true);
                       console.log({ name: playerName, number: parseInt(number_textfield)});
-                      fetch('http://localhost:4000/sendAverageGameNumber', {
+                      fetch('http://localhost:4000/sendBoxGameTokens', {
                         method: 'POST',
                         headers: {
                           'Content-Type': 'application/json'
@@ -83,17 +85,24 @@ const AverageGame = ({ player}: AverageGameProps) => {
                         body: JSON.stringify({ name: playerName, number: number_textfield})
                       })
                       .then(response => response.json())
+                      setTokens(tokenCount - parseInt(number_textfield));
                       }}>
-                      Submit chosen number
+                      Expend tokens
                     </button>
+                    <div className="token-count">
+                      <h4> Tokens remaining: {tokenCount} </h4>
+                    </div>
                   </div>
                 </div>
             </div>
             }
             {decided == true &&
                 <div>
-                    <h2> Number submitted</h2>
+                    <h2> Tokens submitted</h2>
                     <h3> Please wait for the results </h3>
+                    <div className="token-count">
+                      <h4> Tokens remaining: {tokenCount} </h4>
+                    </div>
                 </div>
             }
         </div>
@@ -115,6 +124,13 @@ const AverageGame = ({ player}: AverageGameProps) => {
                 return;
               }
               setLock(true)
+              fetch('http://localhost:4000/participate', {
+                method: 'POST',
+                headers: {
+                  'Content-Type': 'application/json'
+                },
+                body: JSON.stringify({ name: playerName, socketID: socket.id})
+              })
             }}>
             Lock name
           </button>}
@@ -123,8 +139,12 @@ const AverageGame = ({ player}: AverageGameProps) => {
             {player == true && <h3> Player </h3>}
             {player == false && <h3> Game master </h3>}
         </div>
+        </div>}
+        { eliminated && <div>
+          <h1> You have been removed from the game </h1>
+          </div>}
         </>
     );
 };
 
-export default AverageGame;
+export default BoxGame;

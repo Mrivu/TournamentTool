@@ -12,8 +12,17 @@ const AverageGame = ({ player}: AverageGameProps) => {
     const [showExplanation, setShow] = React.useState(true);
     const [playerName, setName] = React.useState('');
     const [nameLocked, setLock] = React.useState(false);
+    const [eliminated, setElimination] = React.useState(false);
+    const [score, setScore] = React.useState(0);
     
     const socket = io('http://localhost:3000');
+
+    function EliminateSelf()
+    {
+      setElimination(true)
+      socket.emit("endConnection");
+    }
+
     socket.on('connect', () => {
       console.log('Connected to server');
       socket.emit('test', "Hello");
@@ -22,11 +31,29 @@ const AverageGame = ({ player}: AverageGameProps) => {
     });
     socket.on("StartNewRound", () =>{
       setDecision(false);
+      setScore(score-1)
       console.log("New round started");
+      if (score <= -9)
+      {
+        EliminateSelf()
+      }
     });
-
+    socket.on("remove", e => {
+      setElimination(true)
+      socket.emit("endConnection");
+    });
+    socket.on("roundWinner", e => {
+      console.log("player hear")
+      setScore(score+1)
+    });
+    socket.on("penalty", e => {
+      console.log("player hear")
+      setScore(score-1)
+    });
+    
     return (
         <>
+        { !eliminated && <div>
         <div>
             {decided == false && <div>
                 <h1> The Average Game </h1>
@@ -96,6 +123,9 @@ const AverageGame = ({ player}: AverageGameProps) => {
                     <h3> Please wait for the results </h3>
                 </div>
             }
+            <div>
+              <h3> Your score is: {score}</h3>
+            </div>
         </div>
         <div className="nameEdit">
           <div className="input-field">
@@ -115,6 +145,13 @@ const AverageGame = ({ player}: AverageGameProps) => {
                 return;
               }
               setLock(true)
+              fetch('http://localhost:4000/participate', {
+                method: 'POST',
+                headers: {
+                  'Content-Type': 'application/json'
+                },
+                body: JSON.stringify({ name: playerName, socketID: socket.id})
+              })
             }}>
             Lock name
           </button>}
@@ -123,6 +160,10 @@ const AverageGame = ({ player}: AverageGameProps) => {
             {player == true && <h3> Player </h3>}
             {player == false && <h3> Game master </h3>}
         </div>
+        </div>}
+        { eliminated && <div>
+          <h1> You have been removed from the game </h1>
+          </div>}
         </>
     );
 };

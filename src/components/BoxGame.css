@@ -64,4 +64,8 @@
     left: 0;
     right: 0;
   }
+
+  .token-count {
+    margin-top: 0.1em;
+  }
   

@@ -17,6 +17,17 @@ io.on("connection", socket => {
     socket.on('endConnection', function (){
         socket.disconnect(0);
     });
+    socket.on('removePlayer', (id) => {
+        socket.to(id).emit("remove");
+    });
+    socket.on('AverageGameRoundWinner', (id) => {
+        console.log("index hear")
+        socket.to(id).emit("roundWinner");
+    });
+    socket.on('AverageGamePenalty', (id) => {
+        console.log("index hear")
+        socket.to(id).emit("penalty");
+    });
 })
 
 const app = express();

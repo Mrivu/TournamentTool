@@ -1,6 +1,7 @@
 import { io } from 'socket.io-client';
 import { useState, useEffect } from 'react';
 import diceImage from '../assets/d6.svg'
+import './GMPage.css';
 
 interface GMPageProps {
   player: boolean;
@@ -11,6 +12,11 @@ const GMPage = ({player}: GMPageProps) => {
     const [gamemode_textfield, gamemode_setTextfield] = useState('');
     const [gamemodeSet, setGamemodeSetNotification] = useState(0); // 0 = no notification, 1 = changed, 2 = failed
     const [gamemode, setGamemode] = useState('');
+    const [removeText, setRemove] = useState('');
+
+    const [extraText, setExtra] = useState('');
+    const [extraText2, setExtra2] = useState('');
+
 
     const socket = io('http://localhost:3000');
     socket.on('connect', () => {
@@ -90,7 +96,16 @@ const GMPage = ({player}: GMPageProps) => {
             New round
         </button>
         <button onClick={() => {
-          fetch('http://localhost:4000/getAverageGameResults', {
+
+          let fetchUrl = '';
+          if (gamemode == 'Average game') {
+            fetchUrl = 'getAverageGameResults';
+          }
+          else if (gamemode == 'Box game') {
+            fetchUrl = 'getBoxGameResults';
+          }
+
+          fetch('http://localhost:4000/' + fetchUrl, {
             method: 'GET',
             headers: {
               'Content-Type': 'application/json'
@@ -115,7 +130,7 @@ const GMPage = ({player}: GMPageProps) => {
             link.href = url;
           
             // Set the link's download attribute to specify the filename
-            link.download = 'Average_game_results.csv';
+            link.download = gamemode + '_results.csv';
           
             // Programmatically click the link to trigger the download
             link.click();
@@ -126,6 +141,100 @@ const GMPage = ({player}: GMPageProps) => {
           }}>
             Download results
         </button>
+        <div></div>
+        <button onClick={() => {
+          fetch('http://localhost:4000/clearParticipants', {
+            method: 'POST',
+            headers: {
+              'Content-Type': 'application/json'
+            },
+          })
+          }}>
+            Clear participants
+        </button>
+        <button onClick={() => {
+          fetch('http://localhost:4000/getParticipants', {
+            method: 'GET',
+            headers: {
+              'Content-Type': 'application/json'
+            }
+          })
+          .then(response => response.blob())
+          .then(blob => {
+            // Convert the blob to text
+            return blob.text();
+          })
+          .then(text => {
+            // Create a new blob from the text
+            const newBlob = new Blob([text], { type: 'text/csv' });
+          
+            // Create a temporary URL for the blob
+            const url = URL.createObjectURL(newBlob);
+          
+            // Create a link element
+            const link = document.createElement('a');
+          
+            // Set the link's href to the temporary URL
+            link.href = url;
+          
+            // Set the link's download attribute to specify the filename
+            link.download = 'gameParticipants.csv';
+          
+            // Programmatically click the link to trigger the download
+            link.click();
+          
+            // Clean up by revoking the temporary URL
+            URL.revokeObjectURL(url);
+          });
+          }}>
+            Download participants
+        </button>
+        <div className="input-field">
+          <input value={removeText}
+            placeholder="Player to remove"
+            type="text"
+            onChange={(e) => {setRemove(e.target.value)}}
+          />
+        </div>
+        <button onClick={() => {
+          socket.emit("removePlayer", removeText)
+          }}>
+            Remove player
+        </button>
+        <div>
+          { gamemode == "Average game" && <div>
+            <div className='AvgBlock'>
+            <div className="input-field">
+            <input value={extraText}
+              placeholder="Winner id"
+              type="text"
+              onChange={(e) => {setExtra(e.target.value)}}
+            />
+            </div>
+            <button onClick={() => {
+            socket.emit("AverageGameRoundWinner", extraText)
+            console.log("Gm send")
+            }}>
+            Select round winner
+            </button>
+            </div>
+            <div className='AvgBlock'>
+            <div className="input-field">
+            <input value={extraText2}
+              placeholder="Penalty id"
+              type="text"
+              onChange={(e) => {setExtra2(e.target.value)}}
+            />
+            </div>
+            <button onClick={() => {
+            socket.emit("AverageGamePenalty", extraText2)
+            console.log("Gm send")
+            }}>
+            Penalty
+            </button>
+            </div>
+            </div>}
+        </div>
         <div className="role-text">
           {player == true && <h3> Player </h3>}
           {player == false && <h3> Game master </h3>}

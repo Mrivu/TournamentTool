@@ -40,8 +40,16 @@ const Lobby = ({ changeRole }: LobbyProps) => {
           <h1> Game login </h1>
           <button className="role-select-button" onClick={() => {
             if (gamemode != 'None') {
-              changeRole(true);
-              history.push('/averageGame');
+              if (gamemode == 'Average game')
+              {
+                changeRole(true);
+                history.push('/averageGame');
+              }
+              else if (gamemode == 'Box game')
+              {
+                changeRole(true);
+                history.push('/boxGame');
+              }
             }
             else
             {
