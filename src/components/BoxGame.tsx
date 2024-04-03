@@ -22,11 +22,11 @@ const BoxGame = ({ player}: BoxGameProps) => {
       // End the connection
       //socket.emit("endConnection");
     });
-    socket.on("StartNewRound", e => {
+    socket.on("StartNewRound", () => {
       setDecision(false);
       console.log("New round started");
     });
-    socket.on("remove", e => {
+    socket.on("remove", () => {
       setElimination(true)
       socket.emit("endConnection");
     });

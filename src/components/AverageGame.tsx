@@ -38,15 +38,15 @@ const AverageGame = ({ player}: AverageGameProps) => {
         EliminateSelf()
       }
     });
-    socket.on("remove", e => {
+    socket.on("remove", () => {
       setElimination(true)
       socket.emit("endConnection");
     });
-    socket.on("roundWinner", e => {
+    socket.on("roundWinner", () => {
       console.log("player hear")
       setScore(score+1)
     });
-    socket.on("penalty", e => {
+    socket.on("penalty", () => {
       console.log("player hear")
       setScore(score-1)
     });
