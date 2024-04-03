@@ -25,7 +25,7 @@ io.on("connection", socket => {
         socket.to(id).emit("roundWinner");
     });
     socket.on('AverageGamePenalty', (id) => {
-        console.log("index hear")
+        console.log("index hear penalty")
         socket.to(id).emit("penalty");
     });
 })

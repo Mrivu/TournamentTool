@@ -13,7 +13,8 @@ const AverageGame = ({ player}: AverageGameProps) => {
     const [playerName, setName] = React.useState('');
     const [nameLocked, setLock] = React.useState(false);
     const [eliminated, setElimination] = React.useState(false);
-    const [score, setScore] = React.useState(0);
+    const [realScore, setScore] = React.useState(0);
+    let score = 0;
     
     const socket = io('http://localhost:3000');
 
@@ -31,9 +32,9 @@ const AverageGame = ({ player}: AverageGameProps) => {
     });
     socket.on("StartNewRound", () =>{
       setDecision(false);
-      setScore(score-1)
+      setScore(realScore - 1);
       console.log("New round started");
-      if (score <= -9)
+      if (realScore <= -9)
       {
         EliminateSelf()
       }
@@ -44,11 +45,17 @@ const AverageGame = ({ player}: AverageGameProps) => {
     });
     socket.on("roundWinner", () => {
       console.log("player hear")
-      setScore(score+1)
+      console.log(score)
+      score += 1;
+      setScore(score);
+      console.log(score)
     });
     socket.on("penalty", () => {
-      console.log("player hear")
-      setScore(score-1)
+      console.log("player hear penalty")
+      console.log(score)
+      score -= 1;
+      setScore(score);
+      console.log(score)
     });
     
     return (
@@ -124,7 +131,7 @@ const AverageGame = ({ player}: AverageGameProps) => {
                 </div>
             }
             <div>
-              <h3> Your score is: {score}</h3>
+              <h3> Your score is: {realScore}</h3>
             </div>
         </div>
         <div className="nameEdit">

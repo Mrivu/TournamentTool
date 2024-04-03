@@ -228,7 +228,7 @@ const GMPage = ({player}: GMPageProps) => {
             </div>
             <button onClick={() => {
             socket.emit("AverageGamePenalty", extraText2)
-            console.log("Gm send")
+            console.log("Gm send pen")
             }}>
             Penalty
             </button>
