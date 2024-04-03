@@ -4,7 +4,7 @@ const bodyParser = require('body-parser');
 const router = require('./routes/router');
 const { Socket } = require('socket.io');
 
-const io = require('socket.io')(3000, {cors: {origin: ['http://localhost:5173']}});
+const io = require('socket.io')(3000, {cors: {origin: ['http://localhost:5173', 'http://172.19.147.76:5173']}});
 
 io.on("connection", socket => {
     console.log(socket.id);

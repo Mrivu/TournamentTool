@@ -8,10 +8,10 @@ interface AverageGameProps {
 
 const AverageGame = ({ player}: AverageGameProps) => {
     const [number_textfield, number_setTextfield] = React.useState('');
-    const [chosen_Number, setChosenNumber] = React.useState('');
     const [decided, setDecision] = React.useState(false);
     const [showExplanation, setShow] = React.useState(true);
     const [playerName, setName] = React.useState('');
+    const [nameLocked, setLock] = React.useState(false);
     
     const socket = io('http://localhost:3000');
     socket.on('connect', () => {
@@ -60,15 +60,31 @@ const AverageGame = ({ player}: AverageGameProps) => {
                     <div className="input-field">
                           <input value={number_textfield}
                             placeholder="Number from 0-100"
-                            type="text"
+                            type="number"
                             onChange={(e) => {number_setTextfield(e.target.value)}}
                           />
                     </div>
                     <button className="submit-button" onClick={() => {
-                          setChosenNumber(number_textfield);
-                          setDecision(true);
-                        }}>
-                          Submit chosen number
+                      if (parseInt(number_textfield) < 0 || parseInt(number_textfield) > 100) {
+                        alert("Number must be between 0 and 100");
+                        return;
+                      }
+                      if (!nameLocked) {
+                        alert("Please lock your name first");
+                        return;
+                      }
+                      setDecision(true);
+                      console.log({ name: playerName, number: parseInt(number_textfield)});
+                      fetch('http://localhost:4000/sendAverageGameNumber', {
+                        method: 'POST',
+                        headers: {
+                          'Content-Type': 'application/json'
+                        },
+                        body: JSON.stringify({ name: playerName, number: number_textfield})
+                      })
+                      .then(response => response.json())
+                      }}>
+                      Submit chosen number
                     </button>
                   </div>
                 </div>
@@ -86,9 +102,22 @@ const AverageGame = ({ player}: AverageGameProps) => {
             <input value={playerName}
               placeholder="Insert name"
               type="text"
-              onChange={(e) => {setName(e.target.value)}}
+              onChange={(e) => {
+                if (!nameLocked) {
+                  setName(e.target.value);
+                }
+              }}
             />
           </div>
+          {!nameLocked && <button className="lock-name" onClick={() => {
+              if (playerName == '') {
+                alert("Please enter a name");
+                return;
+              }
+              setLock(true)
+            }}>
+            Lock name
+          </button>}
         </div>
         <div className="role-text">
             {player == true && <h3> Player </h3>}

@@ -94,6 +94,43 @@ const GMPage = ({player}: GMPageProps) => {
           }}>
             New round
         </button>
+        <button onClick={() => {
+          fetch('http://localhost:4000/getAverageGameResults', {
+            method: 'GET',
+            headers: {
+              'Content-Type': 'application/json'
+            }
+          })
+          .then(response => response.blob())
+          .then(blob => {
+            // Convert the blob to text
+            return blob.text();
+          })
+          .then(text => {
+            // Create a new blob from the text
+            const newBlob = new Blob([text], { type: 'text/csv' });
+          
+            // Create a temporary URL for the blob
+            const url = URL.createObjectURL(newBlob);
+          
+            // Create a link element
+            const link = document.createElement('a');
+          
+            // Set the link's href to the temporary URL
+            link.href = url;
+          
+            // Set the link's download attribute to specify the filename
+            link.download = 'Average_game_results.csv';
+          
+            // Programmatically click the link to trigger the download
+            link.click();
+          
+            // Clean up by revoking the temporary URL
+            URL.revokeObjectURL(url);
+          });
+          }}>
+            Download results
+        </button>
         <div className="role-text">
           {player == true && <h3> Player </h3>}
           {player == false && <h3> Game master </h3>}
