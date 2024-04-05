@@ -5,6 +5,7 @@ import Lobby from './components/Lobby';
 import AverageGame from './components/AverageGame';
 import GMPage from './components/GMPage';
 import BoxGame from './components/BoxGame';
+import ElFarol from './components/ElFarol';
 
 function App() {
   // Global stuff
@@ -34,6 +35,10 @@ function App() {
           <Route exact path="/boxGame">
             <BoxGame player={player}>
             </BoxGame>
+          </Route>
+          <Route exact path="/elFarol">
+            <ElFarol player={player}>
+            </ElFarol>
           </Route>
         </Switch>
       </div>

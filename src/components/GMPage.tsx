@@ -104,6 +104,9 @@ const GMPage = ({player}: GMPageProps) => {
           else if (gamemode == 'Box game') {
             fetchUrl = 'getBoxGameResults';
           }
+          else if (gamemode == 'El farol') {
+            fetchUrl = 'getElFarolResults';
+          }
 
           fetch('http://localhost:4000/' + fetchUrl, {
             method: 'GET',

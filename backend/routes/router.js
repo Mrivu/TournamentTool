@@ -7,7 +7,7 @@ const router = express.Router();
 router.use(bodyParser.json());
 
 let gamemode = "None";
-const gamemodes = ["None", "Average game", "Box game"];
+const gamemodes = ["None", "Average game", "Box game", "El farol"];
 
 
 // Game attributes
@@ -57,9 +57,6 @@ router.post('/sendBoxGameTokens', (req) => {
     const name = req.body.name;
     const number = parseInt(req.body.number); // Convert number to integer
     boxGameResults[name] = number;
-    console.log("Success!");
-    console.log(boxGameResults);
-    console.log(req.query);
 });
 
 router.get('/getBoxGameResults', (req, res) => {
@@ -67,6 +64,22 @@ router.get('/getBoxGameResults', (req, res) => {
     res.json(boxGameResults);
     boxGameResults = {};
 });
+
+// EL FAROL
+let prizes = [5,10,15];
+let ElFarolResults = {};
+router.post('/sendElFarolChoice', (req) => {
+    const name = req.body.name;
+    const choice = req.body.choice;
+    ElFarolResults[name] = choice;
+});
+
+router.get('/getElFarolResults', (req, res) => {
+    console.log("Got Scores!");
+    res.json(ElFarolResults);
+    ElFarolResults = {};
+});
+
 
 router.get('/login', (req, res) => {
         const password = "myPass";
@@ -92,5 +105,9 @@ router.get('/changeGamemode', (req, res) => {
 router.get('/getGamemode', (req, res) => {
     res.send({gamemode:gamemode});
 });
+router.get('/getPrize', (req, res) => {
+    res.send({prize:prizes[req.query.round-1]});
+});
+
 
 module.exports = router;

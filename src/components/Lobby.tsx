@@ -50,6 +50,11 @@ const Lobby = ({ changeRole }: LobbyProps) => {
                 changeRole(true);
                 history.push('/boxGame');
               }
+              else if (gamemode == 'El farol')
+              {
+                changeRole(true);
+                history.push('/elFarol');
+              }
             }
             else
             {
