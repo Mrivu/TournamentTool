@@ -15,7 +15,7 @@ const BoxGame = ({ player}: BoxGameProps) => {
     const [tokenCount, setTokens] = React.useState(100);
     const [eliminated, setElimination] = React.useState(false);
     
-    const socket = io('http://localhost:3000');
+    const socket = io('http://ivugames.fi');
     socket.on('connect', () => {
       console.log('Connected to server');
       socket.emit('test', "Hello");
@@ -77,7 +77,7 @@ const BoxGame = ({ player}: BoxGameProps) => {
                       }
                       setDecision(true);
                       console.log({ name: playerName, number: parseInt(number_textfield)});
-                      fetch('http://localhost:4000/sendBoxGameTokens', {
+                      fetch('http://ivugames.fi/sendBoxGameTokens', {
                         method: 'POST',
                         headers: {
                           'Content-Type': 'application/json'
@@ -124,7 +124,7 @@ const BoxGame = ({ player}: BoxGameProps) => {
                 return;
               }
               setLock(true)
-              fetch('http://localhost:4000/participate', {
+              fetch('http://ivugames.fi/participate', {
                 method: 'POST',
                 headers: {
                   'Content-Type': 'application/json'

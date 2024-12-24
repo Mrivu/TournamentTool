@@ -16,7 +16,7 @@ const Lobby = ({ changeRole }: LobbyProps) => {
       console.log('Fetching data...');
       const fetchData = async () => {
           try {
-              const response = await fetch('http://localhost:4000/getGamemode');
+              const response = await fetch('http://ivugames.fi/getGamemode');
               const result = await response.json();
               setGamemode(result.gamemode);
           } catch (error) {
@@ -66,7 +66,7 @@ const Lobby = ({ changeRole }: LobbyProps) => {
           <div></div>
           <button className="role-select-button" onClick={async () => {
             // Check if password is correct through backend
-            const response = await fetch(`http://localhost:4000/login?password=${gmPass}`, {
+            const response = await fetch(`http://ivugames.fi/login?password=${gmPass}`, {
             method: 'GET',
             });
             if (response.ok) {

@@ -18,7 +18,7 @@ const GMPage = ({player}: GMPageProps) => {
     const [extraText2, setExtra2] = useState('');
 
 
-    const socket = io('http://localhost:3000');
+    const socket = io('http://ivugames.fi');
     socket.on('connect', () => {
       console.log('Connected to server');
       socket.emit('test', "Hello");
@@ -30,7 +30,7 @@ const GMPage = ({player}: GMPageProps) => {
       console.log('Fetching data...');
       const fetchData = async () => {
           try {
-              const response = await fetch('http://localhost:4000/getGamemode');
+              const response = await fetch('http://ivugames.fi/getGamemode');
               const result = await response.json();
               setGamemode(result.gamemode);
           } catch (error) {
@@ -60,7 +60,7 @@ const GMPage = ({player}: GMPageProps) => {
         <div className="Button">
           <button onClick={() => {
             const changeGamemode = async () => {
-              const response = await fetch(`http://localhost:4000/changeGamemode?gamemode=${gamemode_textfield}`, {
+              const response = await fetch(`http://ivugames.fi/changeGamemode?gamemode=${gamemode_textfield}`, {
                 method: 'GET',
               });
               if (response.ok) {
@@ -108,7 +108,7 @@ const GMPage = ({player}: GMPageProps) => {
             fetchUrl = 'getElFarolResults';
           }
 
-          fetch('http://localhost:4000/' + fetchUrl, {
+          fetch('http://ivugames.fi' + fetchUrl, {
             method: 'GET',
             headers: {
               'Content-Type': 'application/json'
@@ -146,7 +146,7 @@ const GMPage = ({player}: GMPageProps) => {
         </button>
         <div></div>
         <button onClick={() => {
-          fetch('http://localhost:4000/clearParticipants', {
+          fetch('http://ivugames.fi/clearParticipants', {
             method: 'POST',
             headers: {
               'Content-Type': 'application/json'
@@ -156,7 +156,7 @@ const GMPage = ({player}: GMPageProps) => {
             Clear participants
         </button>
         <button onClick={() => {
-          fetch('http://localhost:4000/getParticipants', {
+          fetch('http://ivugames.fi/getParticipants', {
             method: 'GET',
             headers: {
               'Content-Type': 'application/json'

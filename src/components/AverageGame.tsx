@@ -16,7 +16,7 @@ const AverageGame = ({ player}: AverageGameProps) => {
     const [realScore, setScore] = React.useState(0);
     let score = 0;
     
-    const socket = io('http://localhost:3000');
+    const socket = io('http://ivugames.fi');
 
     function EliminateSelf()
     {
@@ -109,7 +109,7 @@ const AverageGame = ({ player}: AverageGameProps) => {
                       }
                       setDecision(true);
                       console.log({ name: playerName, number: parseInt(number_textfield)});
-                      fetch('http://localhost:4000/sendAverageGameNumber', {
+                      fetch('http://ivugames.fi/sendAverageGameNumber', {
                         method: 'POST',
                         headers: {
                           'Content-Type': 'application/json'
@@ -152,7 +152,7 @@ const AverageGame = ({ player}: AverageGameProps) => {
                 return;
               }
               setLock(true)
-              fetch('http://localhost:4000/participate', {
+              fetch('http://ivugames.fi/participate', {
                 method: 'POST',
                 headers: {
                   'Content-Type': 'application/json'

@@ -21,7 +21,7 @@ const ElFarol = ({ player}: ElFarolProps) => {
       console.log('Fetching data...');
       const fetchData = async () => {
           try {
-              const response = await fetch(`http://localhost:4000/getPrize?round=${round}`);
+              const response = await fetch(`http://ivugames.fi/getPrize?round=${round}`);
               const result = await response.json();
               setPrize(result.prize);
           } catch (error) {
@@ -39,7 +39,7 @@ const ElFarol = ({ player}: ElFarolProps) => {
       return () => clearInterval(intervalId);
     }, []);
     
-    const socket = io('http://localhost:3000');
+    const socket = io('http://ivugames.fi');
     socket.on('connect', () => {
       console.log('Connected to server');
       socket.emit('test', "Hello");
@@ -83,7 +83,7 @@ const ElFarol = ({ player}: ElFarolProps) => {
                         return;
                       }
                       setDecision(true);
-                      fetch('http://localhost:4000/sendElFarolChoice', {
+                      fetch('http://ivugames.fi/sendElFarolChoice', {
                         method: 'POST',
                         headers: {
                           'Content-Type': 'application/json'
@@ -100,7 +100,7 @@ const ElFarol = ({ player}: ElFarolProps) => {
                         return;
                       }
                       setDecision(true);
-                      fetch('http://localhost:4000/sendElFarolChoice', {
+                      fetch('http://ivugames.fi/sendElFarolChoice', {
                         method: 'POST',
                         headers: {
                           'Content-Type': 'application/json'
@@ -143,7 +143,7 @@ const ElFarol = ({ player}: ElFarolProps) => {
                 return;
               }
               setLock(true)
-              fetch('http://localhost:4000/participate', {
+              fetch('http://ivugames.fi/participate', {
                 method: 'POST',
                 headers: {
                   'Content-Type': 'application/json'

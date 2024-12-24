@@ -9,9 +9,10 @@
     "lint": "eslint . --ext ts,tsx --report-unused-disable-directives --max-warnings 0",
     "preview": "vite preview"
   },
-  "proxy": "https://localhost:4000",
+  "proxy": "http://ivugames.fi",
   "dependencies": {
     "@socket.io/admin-ui": "^0.5.1",
+    "npm": "^10.7.0",
     "papaparse": "^5.4.1",
     "react": "^18.2.0",
     "react-dom": "^18.2.0",
@@ -31,6 +32,6 @@
     "eslint-plugin-react-hooks": "^4.6.0",
     "eslint-plugin-react-refresh": "^0.4.5",
     "typescript": "^5.2.2",
-    "vite": "^5.1.4"
+    "vite": "^5.2.11"
   }
 }
